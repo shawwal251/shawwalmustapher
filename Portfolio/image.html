@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stunning Works</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #fde7cf;
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        
+        .gallery-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform: scale(0.95);
+            opacity: 0;
+            filter: brightness(0.8);
+        }
+        
+        .gallery-item.loaded {
+            opacity: 1;
+            transform: scale(1);
+            filter: brightness(1);
+        }
+        
+        .gallery-item:hover {
+            transform: scale(1.03) !important;
+            box-shadow: 0 30px 60px -10px rgba(0, 0, 0, 0.8);
+            z-index: 10;
+            filter: brightness(1.1);
+        }
+        
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+        
+        .gallery-item:hover img {
+            transform: scale(1.1);
+        }
+        
+        .gallery-item::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, transparent 0%, #17144d 100%);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        
+        .gallery-item:hover::after {
+            opacity: 1;
+        }
+        
+        .gallery-item .caption {
+            position: absolute;
+            bottom: -50px;
+            left: 0;
+            width: 100%;
+            padding: 20px;
+            color: white;
+            z-index: 2;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform: translateY(20px);
+            opacity: 0;
+        }
+        
+        .gallery-item:hover .caption {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        .gallery-item .caption h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .gallery-item .caption p {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        .gallery-item .like-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #cfcdfa;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            transform: translateY(-20px);
+            opacity: 0;
+        }
+        
+        .gallery-item:hover .like-btn {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        .gallery-item .like-btn:hover {
+            background:#fc8500;
+            transform: scale(1.1);
+        }
+        
+        .gallery-item .like-btn.active {
+            background: #fc8500;
+        }
+        
+        .gallery-item .like-btn i {
+            color: white;
+            font-size: 18px;
+        }
+        
+        /* Animation classes */
+        .slide-up {
+            animation: slideUp 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+        
+        .slide-down {
+            animation: slideDown 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+        
+        .fade-in {
+            animation: fadeIn 2s ease forwards;
+        }
+        
+        @keyframes slideUp {
+            from {
+                transform: translateY(100px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        
+        /* Masonry layout */
+        .masonry {
+            column-count: 3;
+            column-gap: 1rem;
+            padding-top: 10px;
+        }
+        
+        @media (max-width: 1024px) {
+            .masonry {
+                column-count: 2;
+                padding-left: 15px;
+                padding-right: 15px;
+                padding-top: 10px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .masonry {
+                column-count: 1;
+                padding-left: 15px;
+                padding-right: 15px;
+                padding-top: 10px;
+            }
+        }
+        
+        /* Scroll indicator */
+        .scroll-indicator {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+            animation: bounce 2s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0) translateX(-50%);
+            }
+            40% {
+                transform: translateY(-20px) translateX(-50%);
+            }
+            60% {
+                transform: translateY(-10px) translateX(-50%);
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <header class="max-w-4xl py-12 mx-auto text-center mb-16 fade-in">
+        <h1 class="text-4xl md:text-5xl font-bold mb-4 text-[#17144d]">
+            Stunning <span class="text-[#fc8500]">Works</span> 
+        </h1>
+        <div class="w-20 h-1 bg-[#fc8500] mx-auto mb-6"></div>
+        <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+            Explore some of my breathtaking designs 
+        </p>
+    </header>
+    
+    <div class="max-w-7xl mt-10 mx-auto ">
+        <div class="masonry">
+            <!-- Gallery items will be inserted here by JavaScript -->
+        </div>
+    </div>
+    
+    <div class="scroll-indicator">
+        <div class="w-10 h-10 rounded-full bg-[#fc8500] bg-opacity-70 flex items-center justify-center">
+            <i class="fas fa-chevron-down text-white text-xl"></i>
+        </div>
+    </div>
+
+    <!-- Footer -->
+<footer class="bg-[#17144d] text-white py-12 mt-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex flex-col md:flex-row justify-between items-center">
+            <div class="mb-6 md:mb-0">
+                <a href="#" class="text-2xl font-bold">Shawwal<span class="text-[#fc8500]">.</span></a>
+                <p class="mt-2 text-gray-400">Creating visual experiences that inspire and engage.</p>
+            </div>
+            <div class="flex space-x-6">
+                <a href="https://www.behance.net/shawwalmustaph" class="text-gray-400 hover:text-white transition">
+                    <i class="fab fa-behance"></i>
+                </a>
+                <a href="https://www.facebook.com/profile.php?id=61572931213976" class="text-gray-400 hover:text-white transition">
+                    <i class="fab fa-facebook"></i>
+                </a>
+                <a href="https://www.instagram.com/shawwal_251?igsh=bDM1cHhlc3hyYWxh" class="text-gray-400 hover:text-white transition">
+                    <i class="fab fa-instagram"></i>
+                </a>
+                <a href="https://www.linkedin.com/in/shawwal-ibn-mustapher-167060284?utm-source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app" class="text-gray-400 hover:text-white transition">
+                    <i class="fab fa-linkedin-in"></i>
+                </a>
+            </div>
+        </div>
+        <div class="border-t border-[#fc8500] mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
+            <p class="text-gray-400 text-sm mb-4 md:mb-0">© 2025 Shawwal Mustapher. All rights reserved.</p>
+            <div class="flex space-x-6">
+                <a href="#" class="text-gray-400 hover:text-white text-sm transition">Privacy Policy</a>
+                <a href="#" class="text-gray-400 hover:text-white text-sm transition">Terms of Service</a>
+                <a href="#" class="text-gray-400 hover:text-white text-sm transition">Cookies</a>
+            </div>
+        </div>
+    </div>
+</footer>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Sample image data
+            const images = [
+                {
+                    url: 'logo.png',
+                    title: 'Ad Poster',
+                    description: 'Majestic mountains under golden sunlight'
+                },
+                {
+                    url: 'one.png',
+                    title: 'Ad Poster',
+                    description: 'Crystal clear waters of the pacific ocean'
+                },
+                {
+                    url: 'Narmie Board.png',
+                    title: 'Ad Poster',
+                    description: 'Mystical forest with morning fog'
+                },
+                {
+                    url: 'Last3.png',
+                    title: 'Ad Poster',
+                    description: 'Endless sand dunes under blue sky'
+                },
+                {
+                    url: 'Adv.png',
+                    title: 'Ad Poster',
+                    description: 'Urban landscape at twilight'
+                },
+                {
+                    url: 'Oud.png',
+                    title: 'Ad Poster',
+                    description: 'Lion resting in the savanna'
+                },
+                {
+                    url: 'Fans.png',
+                    title: 'Ad Poster',
+                    description: 'Contemporary building design'
+                },
+                {
+                    url: 'Dental.png',
+                    title: 'Ad Poster',
+                    description: 'Stunning view of the milky way'
+                },
+                {
+                    url: 'CC.png',
+                    title: 'Ad Poster',
+                    description: 'Colorful abstract painting'
+                },
+                {
+                    url: 'ShaAdv.png',
+                    title: 'Ad Poster',
+                    description: 'Cutting edge technology concepts'
+                },
+                {
+                    url: 'UnimsaPS.png',
+                    title: 'Ad Poster',
+                    description: 'Delicious meal prepared by chef'
+                },
+                {
+                    url: 'Hiking.png',
+                    title: 'Ad Poster',
+                    description: 'Exploring unknown destinations'
+                },
+                {
+                    url: 'Narmie Anniversary.png',
+                    title: 'Ad Poster',
+                    description: 'Exploring unknown destinations'
+                },
+                {
+                    url: 'Ashraf.png',
+                    title: 'Ad Poster',
+                    description: 'Exploring unknown destinations'
+                },
+                {
+                    url: 'Ad1.png',
+                    title: 'Ad Poster',
+                    description: 'Exploring unknown destinations'
+                }
+            ];
+            
+            const gallery = document.querySelector('.masonry');
+            
+            // Create gallery items
+            images.forEach((image, index) => {
+                const item = document.createElement('div');
+                item.className = `gallery-item mb-4 break-inside-avoid ${index % 2 === 0 ? 'slide-up' : 'slide-down'}`;
+                
+                // Random height for masonry effect
+                const heights = ['h-64', 'h-80', 'h-96'];
+                const randomHeight = heights[Math.floor(Math.random() * heights.length)];
+                
+                item.innerHTML = `
+                    <img src="${image.url}" alt="${image.title}" class="${randomHeight} w-full">
+                    <div class="caption">
+                        <h3>${image.title}</h3>
+                        <p>${image.description}</p>
+                    </div>
+                    <div class="like-btn">
+                        <i class="far fa-heart"></i>
+                    </div>
+                `;
+                
+                gallery.appendChild(item);
+                
+                // Load animation
+                setTimeout(() => {
+                    item.classList.add('loaded');
+                }, 100 * index);
+            });
+            
+            // Like button functionality
+            document.addEventListener('click', function(e) {
+                if (e.target.closest('.like-btn')) {
+                    const btn = e.target.closest('.like-btn');
+                    const icon = btn.querySelector('i');
+                    
+                    btn.classList.toggle('active');
+                    if (btn.classList.contains('active')) {
+                        icon.classList.remove('far');
+                        icon.classList.add('fas');
+                    } else {
+                        icon.classList.remove('fas');
+                        icon.classList.add('far');
+                    }
+                }
+            });
+            
+            // Scroll animations
+            const items = document.querySelectorAll('.gallery-item');
+            
+            function checkScroll() {
+                items.forEach(item => {
+                    const itemTop = item.getBoundingClientRect().top;
+                    const windowHeight = window.innerHeight;
+                    
+                    if (itemTop < windowHeight - 100) {
+                        item.classList.add('loaded');
+                    }
+                });
+            }
+            
+            window.addEventListener('scroll', checkScroll);
+            window.addEventListener('resize', checkScroll);
+            checkScroll();
+            
+            // Hide scroll indicator when scrolling down
+            let lastScrollTop = 0;
+            const scrollIndicator = document.querySelector('.scroll-indicator');
+            
+            window.addEventListener('scroll', function() {
+                const st = window.pageYOffset || document.documentElement.scrollTop;
+                
+                if (st > lastScrollTop) {
+                    // Scrolling down
+                    scrollIndicator.style.opacity = '0';
+                    scrollIndicator.style.transform = 'translateY(20px) translateX(-50%)';
+                } else {
+                    // Scrolling up
+                    scrollIndicator.style.opacity = '1';
+                    scrollIndicator.style.transform = 'translateY(0) translateX(-50%)';
+                }
+                lastScrollTop = st <= 0 ? 0 : st;
+            }, false);
+        });
+    </script>
+
+</body>
+</html>
