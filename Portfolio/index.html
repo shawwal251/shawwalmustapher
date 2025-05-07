@@ -886,6 +886,10 @@
     <script>
         // Back to Top Button
         const backToTopButton = document.getElementById('back-to-top');
+
+        backToTopButton.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
         
         // Mobile menu toggle
         const menuBtn = document.getElementById('menu-btn');
