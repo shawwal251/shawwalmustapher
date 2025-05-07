@@ -85,6 +85,14 @@
         .delay-2 {
             transition-delay: 0.4s;
         }
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
 
         .delay-3 {
             transition-delay: 0.6s;
@@ -870,7 +878,15 @@
         </div>
     </footer>
 
+        <!-- Back to Top Button -->
+    <button id="back-to-top" class="fixed bottom-8 right-8 bg-[#fc8500] text-[#17144d] p-3 rounded-full shadow-lg opacity-0 invisible transition-all duration-300">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
     <script>
+        // Back to Top Button
+        const backToTopButton = document.getElementById('back-to-top');
+        
         // Mobile menu toggle
         const menuBtn = document.getElementById('menu-btn');
         const mobileMenu = document.getElementById('mobile-menu');
@@ -902,7 +918,7 @@
         // Navbar background change on scroll
         window.addEventListener('scroll', () => {
             const nav = document.querySelector('nav');
-            if (window.scrollY > 20) {
+            if (window.scrollY > 10) {
                 nav.classList.add('bg-white', 'shadow-md');
                 nav.classList.remove('bg-transparent');
             } else {
