@@ -158,7 +158,7 @@
 
 <body>
     <!-- Navigation -->
-    <nav class="fixed w-full z-50 bg-white shadow-md transition-all duration-300">
+    <nav class="fixed top-4 left-8 right-8 mx-auto w-full z-50 bg-white shadow-md transition-all duration-200">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16">
                 <div class="flex items-center">
@@ -255,7 +255,7 @@
                         visually compelling designs that tell stories and evoke emotions. With over 3+ years in the
                         industry,
                         I've had the privilege of working with brands across various sectors, helping them establish
-                        strong visual identities. I'm the Founder and CEO of, <span class="text-[#fc8500]">SHAMU DESIGN.</span></p>
+                        strong visual identities. My brand name is <span class="text-[#fc8500]">SHAMU DESIGN.</span></p>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                         <div class="flex items-start">
@@ -888,7 +888,7 @@
         const backToTopButton = document.getElementById('back-to-top');
 
                 window.addEventListener('scroll', () => {
-            if (window.pageYOffset > 300) {
+            if (window.pageYOffset > 200) {
                 backToTopButton.classList.remove('opacity-0', 'invisible');
                 backToTopButton.classList.add('opacity-100', 'visible');
             } else {
@@ -932,7 +932,7 @@
         // Navbar background change on scroll
         window.addEventListener('scroll', () => {
             const nav = document.querySelector('nav');
-            if (window.scrollY > 10) {
+            if (window.scrollY > 5) {
                 nav.classList.add('bg-white', 'shadow-md');
                 nav.classList.remove('bg-transparent');
             } else {
